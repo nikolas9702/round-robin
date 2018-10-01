@@ -1,9 +1,10 @@
 // RoundRobin.cpp: define el punto de entrada de la aplicación de consola.
 
-// #include "stdafx.h"
+#include "stdafx.h"
 #include <iostream>
 #include <string>   // C++ string class
 #include <cstring>  // C-string
+#include <time.h>
 
 struct Nodo
 {
@@ -13,75 +14,139 @@ struct Nodo
 
 typedef struct Nodo Nodo;
 
-Nodo * cabeza = NULL; Nodo * cola;
+Nodo * cabeza = NULL; Nodo * cola; Nodo * auxIntervalo;
 void insertar();
 void mostrar();
 void mostrarRound();
 int menu();
 void ejecutarRound();
 void avanzarActividad(Nodo *& , bool & );
-void mostrarArreglo (int [] , int  , bool );
+void mostrarLista(Nodo * , int , Nodo *, bool  );
+void linea(int , int , bool , bool);
+void sleep(int);
 int longitudLista = 0;
-const int limiteMinimo = 5;
-const int limiteMaximo = 10;
+const int limiteMinimo = 2;
+const int limiteMaximo = 6;
 const int steapIntervalos = 3;
-const int tabs = 9;
+int tabs = 8;
+unsigned int microseconds;
 
 int main()
 {
-	longitudLista = 5;
-	int * info = new int[longitudLista];
-	for (int i = 0; i < longitudLista; i++) {
-		info[i] = (i*longitudLista)+i+longitudLista;
-	}
-	for (int i = 0; i < longitudLista; i++) {
-		mostrarArreglo(info,longitudLista,false);
-		int * arregloTmp = new int[longitudLista];
-		arregloTmp[0] = info[longitudLista-1];
-		for ( int j = 0; j < longitudLista ; j ++ ) {
-			arregloTmp[(j+1)] = info[j];
-		}
-		info = arregloTmp;
-	}
-	
-	/*insertar();
-	insertar();
-	insertar();
-	insertar();
-	insertar();
 	int auxMenu;
 	do {
 		auxMenu = menu();
 	} while (auxMenu < 5);
-	*/
+	system("pause");
     return 0;
 }
 
-void mostrarArreglo (int arreglo[] , int longitud , bool limpiar = false ) {
-	if (limpiar == true) {
+void mostrarLista (Nodo * NodoInicial , int longitud , Nodo * inicio , bool limpiar = false ) {
+	bool elmentoAdicional = false;
+	bool salir = false;
+	int ubicacion = (longitudLista - 1);
+	if (limpiar == true)
 		system("cls");
-	}
-	else {
+	else
 		std::cout << std::endl;
+	if (longitud == 1) {
+		longitud = 1;
+		tabs = 13;
+	}
+	else if (longitud == 2) {
+		tabs = 10;
+		elmentoAdicional = true;
+	}
+	else if (longitud == 3) {
+		tabs = 7;
+		longitud = 4;
+		elmentoAdicional = true;
+	}
+	else if (longitud == 4) {
+		tabs = 9;
+		elmentoAdicional = true;
+	}
+	else if (longitud == 6) {
+		tabs = 4;
+		longitud = 13;
+		elmentoAdicional = true;
 	}
 	
-	std::cout << char(201);
-	for ( int i = 0 ; i <= (longitud*tabs)+1 ; i++ ) {
-		std::cout << "="; 
-	}
-	std::cout << char(187);
 	
-	std::cout << std::endl << char(186);
-	for ( int i = 0 ; i < longitud ; i++ ) {
-		std::cout << "\t" << arreglo[i];
+	do
+	{
+		
+		Nodo * aux = NodoInicial;
+		if (inicio == NULL) {
+			linea(longitud, tabs, elmentoAdicional, true);
+			std::cout << std::endl << char(186);
+			while (aux != NULL)
+			{
+				std::cout << "\t" << aux->cantidad;
+				aux = aux->siguiente;
+				if (aux == NodoInicial)
+					break;
+			}
+			std::cout << "\t" << char(186);
+			linea(longitud, tabs, elmentoAdicional, false);
+		}
+		if (inicio != NULL) {
+			system("cls");
+			int * datos = new int[longitudLista];
+			for (int i = 0; i < longitudLista; i++)
+			{
+				datos[i] = char();
+			}
+			datos[ubicacion] = inicio->cantidad;
+			aux = inicio;
+			linea(longitud, tabs, elmentoAdicional, true);
+			std::cout << std::endl << char(186);
+			while (aux != NULL)
+			{
+				std::cout << "\t" << aux->cantidad;
+				aux = aux->siguiente;
+				if (aux == inicio)
+					break;
+			}
+			std::cout << "\t" << char(186);
+			linea(longitud, tabs, elmentoAdicional, false);
+
+			std::cout << "\n";
+
+			linea(longitud, tabs, elmentoAdicional, true);
+			std::cout << std::endl << char(186);
+			for (int i = 0; i < longitudLista; i++)
+			{
+				std::cout << "\t" << datos[i];
+			}
+			ubicacion--;
+			if (ubicacion == 0) {
+				salir = true;
+			}
+			else {
+				datos[ubicacion] = datos[(ubicacion + 1)];
+				datos[(ubicacion + 1)] = NULL;
+			}
+			std::cout << "\t" << char(186);
+			linea(longitud, tabs, elmentoAdicional, false);
+			sleep(1);
+		}
+	} while (inicio != NULL && !salir);
+}
+
+void linea(int longitud, int tabs, bool elmentoAdicional, bool arriba = true) {
+	int arreglo[] = { 200,188 };
+	if (arriba) {
+		arreglo[0] = 201;
+		arreglo[1] = 187;
 	}
-	std::cout << "\t" << char(186);
-	
-	std::cout << std::endl << char(200);
-	for ( int i = 0 ; i <= (longitud*tabs)+1 ; i++ ) {
-		std::cout << "="; 
+	std::cout << std::endl << char(arreglo[0]);
+	for (int i = 0; i <= (longitud*tabs) + 1; i++) {
+		std::cout << "=";
+		if (elmentoAdicional && i == (longitud*tabs) + 1)
+			std::cout << "=";
 	}
-	std::cout << char(188);
+	std::cout << char(arreglo[1]);
 }
 
 void insertar() {
@@ -122,24 +187,31 @@ void mostrar() {
 void mostrarRound() {
 	int elementos = 0;
 	Nodo * aux = cabeza;
-	while (aux != NULL ) {
-		std::cout << aux->cantidad << "\t";
-		aux = aux->siguiente;
-		if (cabeza == aux)
-			break;
-	}
+	mostrarLista(cabeza, longitudLista , auxIntervalo , false );
 	std::cout << std::endl;
+}
+
+void sleep(int segundos) {
+	time_t timer, actual;
+	actual = time(NULL) + segundos;
+	timer = actual;
+	while (actual >= timer)
+	{
+		timer = time(NULL);
+	}
 }
 
 void ejecutarRound() {
 	int contadorCeros = 0;
 	bool eliminar = false;
+
 	if (longitudLista >= limiteMinimo && longitudLista <= limiteMaximo ) {
 		Nodo * auxCiclo = cabeza;
 		Nodo * auxAnterior = NULL;
 		while (auxCiclo != NULL && longitudLista > 0)
 		{
 			avanzarActividad(auxCiclo , eliminar);
+			auxIntervalo = auxCiclo;
 			mostrarRound();
 			auxAnterior = auxCiclo;
 			if (eliminar == true) {
@@ -189,6 +261,7 @@ int menu() {
 	{
 		case 1 :
 			insertar();
+			mostrarLista(cabeza, longitudLista , NULL, true);
 		break;
 		case 2:
 			mostrar();
