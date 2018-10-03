@@ -208,11 +208,12 @@ void ejecutarRound() {
 	if (longitudLista >= limiteMinimo && longitudLista <= limiteMaximo ) {
 		Nodo * auxCiclo = cabeza;
 		Nodo * auxAnterior = NULL;
+		auxIntervalo = cola;
 		while (auxCiclo != NULL && longitudLista > 0)
 		{
 			avanzarActividad(auxCiclo , eliminar);
-			auxIntervalo = auxCiclo;
 			mostrarRound();
+			auxIntervalo = auxCiclo;
 			auxAnterior = auxCiclo;
 			if (eliminar == true) {
 				longitudLista--;
