@@ -120,7 +120,7 @@ void mostrarLista (Nodo * NodoInicial , int longitud , Nodo * inicio , bool limp
 				std::cout << "\t" << datos[i];
 			}
 			ubicacion--;
-			if (ubicacion == 0) {
+			if (ubicacion == -1) {
 				salir = true;
 			}
 			else {
@@ -212,8 +212,8 @@ void ejecutarRound() {
 		while (auxCiclo != NULL && longitudLista > 0)
 		{
 			avanzarActividad(auxCiclo , eliminar);
-			mostrarRound();
 			auxIntervalo = auxCiclo;
+			mostrarRound();
 			auxAnterior = auxCiclo;
 			if (eliminar == true) {
 				longitudLista--;
